@@ -1,0 +1,37 @@
+Travaux pratiques – Piratage de mot de passe (version du formateur)
+Étape 1 :	 Installez le logiciel john the ripper
+cd /opt
+wget https://www.openwall.com/john/k/john-1.9.0-jumbo-1.tar.xz
+ tar -xvf  john-1.9.0-jumbo-1.tar.xz
+mv  john-1.9.0-jumbo-1 john
+cd john
+dnf install openssl-devel
+cd src 
+./configure
+make -s clean && make -sj4
+Étape 2 :	Lancez John the Ripper.
+a.	À l'invite de commandes, saisissez la commande suivante pour modifier le répertoire où se trouve John the Ripper :
+cisco@ubuntu:~$ cd /opt/john/run
+b.	À l'invite de commandes, saisissez la commande suivante :
+cisco@ubuntu:~/opt/john/run$ sudo ./unshadow /etc/passwd /etc/shadow > mypasswd
+
+Cette commande regroupera le contenu du fichier /etc/passwd où sont stockés les comptes d'utilisateurs et celui du fichier /etc/shadow où les mots de passe sont stockés pour les placer dans un nouveau fichier nommé « mypasswd ». 
+Étape 3 :	Récupérez les mots de passe.
+a.	Saisissez la commande suivante dans le terminal :
+cisco@ubuntu:~/Downloads/john/run$ ./john --show mypasswd
+ 
+Comme il apparaît ci-dessus, aucun mot de passe n'a été piraté à ce stade.
+b.	À l'invite de commandes, saisissez la commande suivante :
+cisco@ubuntu:~/Downloads/john/run$ ./john --wordlist=password.lst --rules mypasswd --format=crypt
+ 
+Le programme John the Ripper utilise un dictionnaire prédéfini appelé password.lst et une série standard de « règles » prédéfinies pour exploiter ce dictionnaire et récupérer tous les hashs de mots de passe de type md5crypt et crypt.
+Les résultats ci-dessous présentent les mots de passe pour chaque compte.
+ 
+c.	À l'invite de commandes, saisissez la commande suivante :
+cisco@ubuntu:~/Downloads/john/run$ ./john --show mypasswd
+ 
+Combien de mots de passe ont été piratés ?
+____________________________________________________________________________________
+Cinq (5) : les quatre comptes utilisateur plus le compte Cisco.
+Références
+John the Ripper : http://www.openwall.com/john/
